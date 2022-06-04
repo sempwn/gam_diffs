@@ -23,31 +23,33 @@ calc_generic_vector_gam <- function(m, newdata, U = NULL,
 
   # calculate quantile for % ci
   p <- 1 - (1 - ci) / 2
-  z <- qnorm(p)
+  z <- stats::qnorm(p)
 
   # linear predictor matrix
-  Xp <- predict(m, newdata = newdata, type = "lpmatrix")
+  Xp <- stats::predict(m, newdata = newdata, type = "lpmatrix")
   # variance covariance of predicted values
-  points_vcov <- Xp %*% vcov(m) %*% t(Xp)
+  # a function with a generic name like t and no proper handling of
+  # namespace, are you kidding me??
+  points_vcov <- Xp %*% stats::vcov(m) %*% base::t(Xp)
 
   # predicted difference
-  preds <- Xp %*% coef(m)
+  preds <- Xp %*% stats::coef(m)
 
 
 
   # calculate the variance using the delta method
   grad_g <- array(exp(preds), c(length(preds), length(coef(m)))) * Xp
-  points_vcov <- grad_g %*% vcov(m) %*% t(grad_g)
+  points_vcov <- grad_g %*% stats::vcov(m) %*% base::t(grad_g)
 
   preds <- exp(preds)
 
 
   # Calculate the variance vector
 
-  pred_var <- diag(t(U) %*% points_vcov %*% U)
+  pred_var <- diag(base::t(U) %*% points_vcov %*% U)
   se <- sqrt(pred_var)
 
-  diffs <- t(U) %*% preds
+  diffs <- base::t(U) %*% preds
   lc <- diffs - z * se
   uc <- diffs + z * se
 
