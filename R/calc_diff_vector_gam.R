@@ -5,6 +5,8 @@
 #' @param newdata data.frame nrow >= 2 defining points to compare to the first
 #' row in the data frame
 #' @param ci range of confidence interval
+#' @param delta boolean determines whether to apply the delta approximation
+#' to a log link function
 #' @return list
 #' @export
 calc_diff_vector_gam <- function(m, newdata, ci = 0.95, delta = TRUE) {

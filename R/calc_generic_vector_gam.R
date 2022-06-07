@@ -38,7 +38,7 @@ calc_generic_vector_gam <- function(m, newdata, U = NULL,
 
 
   # calculate the variance using the delta method
-  grad_g <- array(exp(preds), c(length(preds), length(coef(m)))) * Xp
+  grad_g <- array(exp(preds), c(length(preds), length(stats::coef(m)))) * Xp
   points_vcov <- grad_g %*% stats::vcov(m) %*% base::t(grad_g)
 
   preds <- exp(preds)

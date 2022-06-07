@@ -15,6 +15,9 @@ calc_diff_vector_gam(m, newdata, ci = 0.95, delta = TRUE)
 row in the data frame}
 
 \item{ci}{range of confidence interval}
+
+\item{delta}{boolean determines whether to apply the delta approximation
+to a log link function}
 }
 \value{
 list

@@ -262,7 +262,79 @@ vector of variances.
 
 When estimating for a counterfactual scenario we can apply Equation \@ref(eq:quad-u)
 to a set of random variables representing the baseline scenario and another 
-set of random variables representing the counterfactual scenario. 
+set of random variables representing the counterfactual scenario. Generate a 
+vector of random variables representing the baseline scenario by setting the 
+counterfactual terms to zero and generating a random variable of the predicted 
+value for $Y^b$ at each time-point $1,\ldots,T$ and the equivalent for the 
+predicted value under the counterfactual $Y^c$,
+
+$$
+Y = (Y^{b}_{1},\ldots,Y^{b}_{T},Y^{c}_{1},\ldots,Y^{c}_{T})
+$$
+
+The vector $u$ can subsequently be defined as,
+
+$$
+u_i = \begin{cases}
+1, & \text{if } i \leq p \\
+-1, & \text{if } i > p
+\end{cases}.
+$$
+
+### Estimation of the variance for a relative difference
+
+for relative difference estimates the delta method approach can be extended to
+account for the non-linear function of the ratio of two random variables which
+is applied when calculating the relative difference i.e. variance estimates of
+the form
+
+$$
+\text{Var}\left(\frac{Y - X}{Y}\right) = \text{Var}\left(1 - \frac{X}{Y}\right) = \text{Var}\left(\frac{X}{Y}\right).
+$$
+
+Define the ratio function $f(x,y) = x/y$. Performing a second order Taylor expansion
+around the mean for $X$ and $Y$ provides the following approaximation,
+
+$$
+\begin{aligned}
+f(x,y) &\approx f(\bar{x},\bar{y}) + f'_x(\bar{x},\bar{y})(x - \bar{x}) + f'_y(\bar{x},\bar{y})(y - \bar{y}) \\
+&+ \frac{1}{2} \left[ f''_{xx}(\bar{x},\bar{y})(x - \bar{x})^2 
++ f''_{xy}(\bar{x},\bar{y})(x - \bar{x})(y - \bar{y})
++ f''_{yy}(\bar{x},\bar{y})(y - \bar{y})^2
+\right].
+\end{aligned}
+$$
+
+For estimation of the variance we can take the first order approximation and
+given the definition,
+
+$$\text{Var}(f(X,Y)) = \mathbb{E}\left[ (f(X,Y) - f(\bar{x},\bar{y}))^2 \right]$$
+
+where we use the approximation $\mathbb{E}[f(X,Y)] = f(\bar{x},\bar{y})$. 
+Applying the first order Taylor approximation to the variance gives,
+
+$$
+\begin{aligned}
+\text{Var}(f(X,Y)) &= \mathbb{E}\left[ (f(X,Y) - f(\bar{x},\bar{y}))^2 \right] \\ 
+&= \mathbb{E}\left[ \left(f(\bar{x},\bar{y}) + f'_x(\bar{x},\bar{y})(x - \bar{x}) + f'_y(\bar{x},\bar{y})(y - \bar{y}) - f(\bar{x},\bar{y}) \right)^2 \right] \\
+&= \mathbb{E}\left[ \left(f'_x(\bar{x},\bar{y})(x - \bar{x}) + f'_y(\bar{x},\bar{y})(y - \bar{y}) \right)^2 \right] \\
+\end{aligned} \\
+&= \mathbb{E}\left[ f'_x(\bar{x},\bar{y})^2(x - \bar{x})^2 + f'_y(\bar{x},\bar{y})^2(y - \bar{y})^2 +   f'_x(\bar{x},\bar{y})f'_y(\bar{x},\bar{y})(x - \bar{x})(y - \bar{y})\right] \\
+&= f'_x(\bar{x},\bar{y})^2 \text{Var}(X) + f'_y(\bar{x},\bar{y})^2 \text{Var}(Y) + f'_x(\bar{x},\bar{y})f'_y(\bar{x},\bar{y}) \text{Cov}(X,Y)
+\end{aligned}
+$$
+
+Given that $f'_x(\bar{x},\bar{y}) = 1/\bar{y}$ and $f'_y(\bar{x},\bar{y}) = -\bar{x}/\bar{y}^2$ we arrive
+at the final result,
+
+$$
+\begin{aligned}
+\text{Var}(f(X,Y)) &= f'_x(\bar{x},\bar{y})^2 \text{Var}(X) + f'_y(\bar{x},\bar{y})^2 \text{Var}(Y) + f'_x(\bar{x},\bar{y})f'_y(\bar{x},\bar{y}) \text{Cov}(X,Y) \\
+&= 1/\bar{y}^2 \text{Var}(X)  + \bar{x}^2/\bar{y}^4 \text{Var}(Y) -\bar{x}/\bar{y}^3 \text{Cov}(X,Y) \\
+&= 1/\bar{y}^4 \left( \bar{y}^2\text{Var}(X)  + \bar{x}^2 \text{Var}(Y) -\bar{x}\bar{y} \text{Cov}(X,Y)  \right)
+\end{aligned}
+$$
+
 
 ## Estimating the confidence interval by sampling the posterior
 
