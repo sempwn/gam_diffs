@@ -1,3 +1,7 @@
+#' Estimate of differences
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Calculate the variance between a baseline prediction
 #' and subsequent predictions in a gam model
 #' based on modified code from gam predict function help

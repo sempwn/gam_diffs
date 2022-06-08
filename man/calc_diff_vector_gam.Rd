@@ -2,9 +2,7 @@
 % Please edit documentation in R/calc_diff_vector_gam.R
 \name{calc_diff_vector_gam}
 \alias{calc_diff_vector_gam}
-\title{Calculate the variance between a baseline prediction
-and subsequent predictions in a gam model
-based on modified code from gam predict function help}
+\title{Estimate of differences}
 \usage{
 calc_diff_vector_gam(m, newdata, ci = 0.95, delta = TRUE)
 }
@@ -23,6 +21,7 @@ to a log link function}
 list
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 Calculate the variance between a baseline prediction
 and subsequent predictions in a gam model
 based on modified code from gam predict function help
