@@ -8,10 +8,13 @@
 #' row in the data frame
 #' @param U difference matrix. defines the vector of differences being computed
 #' @param ci range of confidence interval
+#' @param delta Use delta method for log link function
+#' @param use_relative_diff Use delta approximation to relative difference
 #' @return list
 #' @noRd
 calc_generic_vector_gam <- function(m, newdata, U = NULL,
-                                    ci = 0.95, delta = TRUE) {
+                                    ci = 0.95, delta = TRUE,
+                                    use_relative_diff = FALSE) {
   npreds <- nrow(newdata)
 
   if (npreds < 2) {
@@ -21,6 +24,10 @@ calc_generic_vector_gam <- function(m, newdata, U = NULL,
   # check that U has right dimensions
   if (!(nrow(U) == npreds)) {
     stop(glue::glue("U must have rows of length {npreds}"))
+  }
+
+  if (ncol(U) != 2) {
+    stop("U must have 2 columns: one for baseline and one for comparison.")
   }
 
   # calculate quantile for % ci
@@ -46,16 +53,50 @@ calc_generic_vector_gam <- function(m, newdata, U = NULL,
   preds <- exp(preds)
 
 
-  # Calculate the variance vector
+  # Calculate the variance-covariance matrix
+  mat_varcov <- base::t(U) %*% points_vcov %*% U
 
-  pred_var <- diag(base::t(U) %*% points_vcov %*% U)
+  # mean vector of summed means
+  mean_vec <- base::t(U) %*% preds
+
+  if (use_relative_diff) {
+    calced_diff <- var_relative_diff(mean_vec, mat_varcov)
+  } else {
+    calced_diff <- var_absolute_diff(mean_vec, mat_varcov)
+  }
+
+  pred_var <- calced_diff$pred_var
+  pred_diffs <- calced_diff$pred_diffs
+
+
   se <- sqrt(pred_var)
 
-  diffs <- base::t(U) %*% preds
-  lc <- diffs - z * se
-  uc <- diffs + z * se
 
-  return(list(m = diffs, lc = lc, uc = uc))
+  lc <- pred_diffs - z * se
+  uc <- pred_diffs + z * se
+
+  return(list(m = pred_diffs, lc = lc, uc = uc))
+}
+
+#' Variance of the absolute difference of X - Y
+#' @param vec_mean vector of means x and y
+#' @param mat_varcov covariance matrix for x and y
+#' @return numeric
+#' @noRd
+var_absolute_diff <- function(vec_mean, mat_varcov) {
+  var_x <- mat_varcov[1, 1]
+  var_y <- mat_varcov[2, 2]
+  cov_xy <- mat_varcov[1, 2]
+
+  mean_x <- vec_mean[1]
+  mean_y <- vec_mean[2]
+
+  pred_var <- var_x + var_y - 2 * cov_xy
+  pred_diffs <- (mean_x - mean_y) / mean_y
+
+  result <- list(pred_diffs = pred_diffs, pred_var = pred_var)
+
+  return(result)
 }
 
 
@@ -64,17 +105,19 @@ calc_generic_vector_gam <- function(m, newdata, U = NULL,
 #' @param mat_varcov covariance matrix for x and y
 #' @return numeric
 #' @noRd
-relative_diff_delta <- function(vec_mean,mat_varcov){
-  var_x <- mat_varcov[1,1]
-  var_y <- mat_varcov[2,2]
-  cov_xy <- mat_varcov[1,2]
+var_relative_diff <- function(vec_mean, mat_varcov) {
+  var_x <- mat_varcov[1, 1]
+  var_y <- mat_varcov[2, 2]
+  cov_xy <- mat_varcov[1, 2]
 
   mean_x <- vec_mean[1]
   mean_y <- vec_mean[2]
 
-  result <- mean_x^2 * var_x + mean_x^2 * var_y + mean_x * mean_y * cov_xy
-  result <- result / mean_y^4
+  pred_var <- mean_y^2 * var_x + mean_x^2 * var_y - mean_x * mean_y * cov_xy
+  pred_var <- pred_var / mean_y^4
+  pred_diffs <- mean_x - mean_y
+
+  result <- list(pred_diffs = pred_diffs, pred_var = pred_var)
 
   return(result)
-
 }
