@@ -14,7 +14,7 @@ row in the data frame}
 
 \item{ci}{range of confidence interval}
 
-\item{delta}{boolean determines whether to apply the delta approximation
+\item{delta}{Boolean determines whether to apply the delta approximation
 to a log link function}
 }
 \value{
@@ -22,6 +22,7 @@ list
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Calculate the variance between a baseline prediction
 and subsequent predictions in a gam model
 based on modified code from gam predict function help

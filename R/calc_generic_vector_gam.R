@@ -92,7 +92,7 @@ var_absolute_diff <- function(vec_mean, mat_varcov) {
   mean_y <- vec_mean[2]
 
   pred_var <- var_x + var_y - 2 * cov_xy
-  pred_diffs <- (mean_x - mean_y) / mean_y
+  pred_diffs <- (mean_x - mean_y)
 
   result <- list(pred_diffs = pred_diffs, pred_var = pred_var)
 
@@ -115,7 +115,7 @@ var_relative_diff <- function(vec_mean, mat_varcov) {
 
   pred_var <- mean_y^2 * var_x + mean_x^2 * var_y - mean_x * mean_y * cov_xy
   pred_var <- pred_var / mean_y^4
-  pred_diffs <- mean_x - mean_y
+  pred_diffs <- (mean_x - mean_y) / mean_y
 
   result <- list(pred_diffs = pred_diffs, pred_var = pred_var)
 
