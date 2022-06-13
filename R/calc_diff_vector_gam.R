@@ -11,9 +11,12 @@
 #' @param ci range of confidence interval
 #' @param delta Boolean determines whether to apply the delta approximation
 #' to a log link function
+#' @param use_relative_diff provide estimates as a relative difference, otherwise
+#' presented as an absolute difference
 #' @return list
 #' @export
-calc_diff_vector_gam <- function(m, newdata, ci = 0.95, delta = TRUE) {
+calc_diff_vector_gam <- function(m, newdata, ci = 0.95, delta = TRUE,
+                                 use_relative_diff = FALSE) {
   npreds <- nrow(newdata)
 
   if (npreds < 2) {
@@ -34,7 +37,8 @@ calc_diff_vector_gam <- function(m, newdata, ci = 0.95, delta = TRUE) {
 
     res <- calc_sum_counterfactual_gam(m, baseline_data,
       counter_data = counter_data,
-      ci = 0.95, delta = TRUE
+      ci = ci, delta = delta,
+      use_relative_diff = use_relative_diff
     )
     diffs[i - 1] <- res$m
     lc[i - 1] <- res$lc

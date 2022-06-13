@@ -4,7 +4,13 @@
 \alias{calc_diff_vector_gam}
 \title{Estimate of differences}
 \usage{
-calc_diff_vector_gam(m, newdata, ci = 0.95, delta = TRUE)
+calc_diff_vector_gam(
+  m,
+  newdata,
+  ci = 0.95,
+  delta = TRUE,
+  use_relative_diff = FALSE
+)
 }
 \arguments{
 \item{m}{model object}
@@ -16,6 +22,9 @@ row in the data frame}
 
 \item{delta}{Boolean determines whether to apply the delta approximation
 to a log link function}
+
+\item{use_relative_diff}{provide estimates as a relative difference, otherwise
+presented as an absolute difference}
 }
 \value{
 list

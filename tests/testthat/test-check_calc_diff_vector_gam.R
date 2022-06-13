@@ -24,3 +24,13 @@ test_that("diff vector gam returns all numeric", {
 
   expect_true(all(sapply(test_diffs, is.numeric)))
 })
+
+test_that("diff vector gam returns generates output for relative diff", {
+  res <- create_random_data()
+  m <- mgcv::gam(y ~ s(x), data = res, family = poisson)
+  newdata <- dplyr::tibble(x = c(0, 20, 60))
+  test_diffs <- calc_diff_vector_gam(m, newdata, ci = 0.95, delta = TRUE,
+                                     use_relative_diff = TRUE)
+
+  expect_true(all(sapply(test_diffs, is.numeric)))
+})
