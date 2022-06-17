@@ -41,21 +41,33 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(gamdiffs)
-## basic example code
+library(mgcv)
+#> Loading required package: nlme
+#> This is mgcv 1.8-35. For overview type 'help("mgcv-package")'.
+## basic usage
+res <- gamdiffs:::create_random_data()
+m <- mgcv::gam(y ~ s(x), data = res, family = poisson)
+baseline_data <- dplyr::tibble(x = 0:20)
+counter_data <- dplyr::tibble(x = 21:40)
+test_diffs <- calc_sum_counterfactual_gam(m, baseline_data,
+  counter_data = counter_data,
+  ci = 0.95, delta = TRUE
+)
 ```
 
 What is special about using `README.Rmd` instead of just `README.md`?
 You can include R chunks like so:
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+print(test_diffs)
+#> $m
+#> [1] -18.42039
+#> 
+#> $lc
+#> [1] -38.21042
+#> 
+#> $uc
+#> [1] 1.36964
 ```
 
 You’ll still need to render `README.Rmd` regularly, to keep `README.md`

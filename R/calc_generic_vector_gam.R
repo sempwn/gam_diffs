@@ -47,7 +47,7 @@ calc_generic_vector_gam <- function(m, newdata, U = NULL,
 
 
   # calculate the variance of an exponential using the delta method
-  grad_g <- array(exp(preds), c(length(preds), length(stats::coef(m)))) * Xp
+  grad_g <- gradient_link_function_vector(m,preds,Xp)
   points_vcov <- grad_g %*% stats::vcov(m) %*% base::t(grad_g)
 
   preds <- exp(preds)
@@ -120,4 +120,28 @@ var_relative_diff <- function(vec_mean, mat_varcov) {
   result <- list(pred_diffs = pred_diffs, pred_var = pred_var)
 
   return(result)
+}
+
+
+#' gradient for log link function
+#' @param m model object
+#' @param preds vector of predictors
+#' @param Xp a matrix giving the fitted values of each term in the model
+#'   formula on the linear predictor scale
+#' @return numeric vector
+#' @noRd
+gradient_link_function_vector <- function(m,preds,Xp){
+  family_name <- stats::family(m)$family
+  if(family_name == "poisson"){
+    grad_g <- array(exp(preds), c(length(preds), length(stats::coef(m)))) * Xp
+  }else if(family_name == "binomial"){
+    exp_preds <- array(exp(preds), c(length(preds), length(stats::coef(m))))
+    grad_g <-  exp_preds / (1 + exp_preds)^2 * Xp
+  }else if(family_name == "exp"){
+    stop("Not yet implemented!")
+    grad_g <- NULL
+  } else{
+    stop(glue::glue("Family {family_name} not implemented for delta method!"))
+  }
+  return(grad_g)
 }
