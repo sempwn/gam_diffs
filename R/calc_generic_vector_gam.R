@@ -50,7 +50,8 @@ calc_generic_vector_gam <- function(m, newdata, U = NULL,
   grad_g <- gradient_link_function_vector(m,preds,Xp)
   points_vcov <- grad_g %*% stats::vcov(m) %*% base::t(grad_g)
 
-  preds <- exp(preds)
+  ilink <- family(m)$linkinv
+  preds <- ilink(preds)
 
 
   # Calculate the variance-covariance matrix

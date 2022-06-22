@@ -4,7 +4,6 @@
 #'
 #' Calculate the variance between a baseline prediction
 #' and subsequent predictions in a gam model
-#' based on modified code from gam predict function help
 #' @param m model object
 #' @param newdata data.frame nrow >= 2 defining points to compare to the first
 #' row in the data frame

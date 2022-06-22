@@ -27,4 +27,5 @@ VignetteBuilder: knitr
 Imports: 
     stats,
     glue,
-    dplyr
+    dplyr,
+    MASS
