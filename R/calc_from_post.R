@@ -26,7 +26,12 @@ calc_generic_vector_from_post <- function(m, newdata,
   }
 
   # flat vector version of 2 x npreds
-  V <- U[1,] - U[2,]
+  V <- U[, 1] - U[, 2]
+  V <- matrix(V, ncol = npreds)
+
+  # baseline U vector used in relative change calculation
+  V_baseline <- U[, 2]
+  V_baseline <- matrix(V_baseline, ncol = npreds)
 
   # linear predictor matrix
   Xp <- predict(m, newdata = newdata, type = "lpmatrix")
@@ -40,17 +45,19 @@ calc_generic_vector_from_post <- function(m, newdata,
   mrand <- MASS::mvrnorm(nrep, beta, Vb)
 
   ilink <- family(m)$linkinv
-  opt <- t(U) %*% ilink(Xp %*% t(mrand))
+  opt <- V %*% ilink(Xp %*% t(mrand))
 
+  # TODO check opt above and add in calc of difference and optional
+  # relative diff below.
+  if(use_relative_diff){
+    baseline_opt <- V_baseline %*% ilink(Xp %*% t(mrand))
+    opt <- opt/baseline_opt
+  }
 
-  diffs <- rowMeans(opt)
-  lc <- matrixStats::rowQuantiles(opt, probs = (1 - ci) / 2)
-  uc <- matrixStats::rowQuantiles(opt, probs = 1 - (1 - ci) / 2)
+  diffs <- mean(opt)
+  lc <- stats::quantile(opt, probs = (1 - ci) / 2)
+  uc <- stats::quantile(opt, probs = 1 - (1 - ci) / 2)
 
-  # only include the differences
-  diffs <- diffs[-1]
-  lc <- lc[-1]
-  uc <- uc[-1]
 
   return(list(m = diffs, lc = lc, uc = uc))
 }
@@ -90,12 +97,11 @@ calc_diff_from_post <- function(m, newdata, ci = 0.95,
   ilink <- family(m)$linkinv
   for (i in seq_len(nrep)) {
     pred <- ilink(Xp %*% mrand[i, ])
-    if(use_relative_diff){
-      opt[i] <- (pred[1] - pred[2])/pred[2]
-    }else{
+    if (use_relative_diff) {
+      opt[i] <- (pred[1] - pred[2]) / pred[2]
+    } else {
       opt[i] <- pred[1] - pred[2]
     }
-
   }
 
   diffs <- mean(opt)

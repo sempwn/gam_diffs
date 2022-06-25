@@ -9,7 +9,9 @@ calc_diff_vector_gam(
   newdata,
   ci = 0.95,
   delta = TRUE,
-  use_relative_diff = FALSE
+  use_relative_diff = FALSE,
+  use_post = FALSE,
+  nrep = 1000
 )
 }
 \arguments{
@@ -25,6 +27,11 @@ to a log link function}
 
 \item{use_relative_diff}{provide estimates as a relative difference, otherwise
 presented as an absolute difference}
+
+\item{use_post}{Use posterior to sample estimaton of means and confidence intervals}
+
+\item{nrep}{number of samples used for posterior sampling. Only used if \code{use_post}
+is \code{TRUE}}
 }
 \value{
 list

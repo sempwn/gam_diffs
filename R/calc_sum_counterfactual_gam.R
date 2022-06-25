@@ -13,12 +13,17 @@
 #' to a log link function
 #' @param use_relative_diff provide estimates as a relative difference, otherwise
 #' presented as an absolute difference
+#' @param use_post Use posterior to sample estimaton of means and confidence intervals
+#' @param nrep number of samples used for posterior sampling. Only used if `use_post`
+#'  is `TRUE`
 #' @return list
 #' @export
 calc_sum_counterfactual_gam <- function(m, baseline_data,
                                         counter_data = NULL,
                                         ci = 0.95, delta = TRUE,
-                                        use_relative_diff = FALSE) {
+                                        use_relative_diff = FALSE,
+                                        use_post = FALSE,
+                                        nrep = 1000) {
   n_baseline <- nrow(baseline_data)
   total_rows <- n_baseline
   newdata <- baseline_data
@@ -45,11 +50,20 @@ calc_sum_counterfactual_gam <- function(m, baseline_data,
   # Create the difference matrix
   U <- matrix(U, nrow = total_rows, ncol = 2)
 
-  res <- calc_generic_vector_gam(m, newdata,
-    U = U,
-    ci = ci, delta = delta,
-    use_relative_diff = use_relative_diff
-  )
+  if(use_post){
+    res <- calc_generic_vector_from_post(m, newdata,
+      U = U,
+      ci = ci,
+      use_relative_diff = use_relative_diff,
+      nrep = nrep
+    )
+  }else{
+    res <- calc_generic_vector_gam(m, newdata,
+      U = U,
+      ci = ci, delta = delta,
+      use_relative_diff = use_relative_diff
+    )
+  }
 
 
   return(res)
