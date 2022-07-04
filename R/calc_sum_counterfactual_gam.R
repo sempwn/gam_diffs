@@ -70,8 +70,8 @@ calc_sum_counterfactual_gam <- function(m, baseline_data,
 }
 
 #' Check both dataframes have same columns
-#' @param dataframe1
-#' @param dataframe2
+#' @param dataframe1 First dataframe
+#' @param dataframe2 Second dataframe
 #' @noRd
 dataframes_have_same_columns <- function(dataframe1, dataframe2) {
   column_names1 <- colnames(dataframe1)

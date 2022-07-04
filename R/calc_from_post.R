@@ -4,7 +4,10 @@
 #' row in the data frame
 #' @param U difference matrix. defines the vector of differences being computed
 #' @param ci range of confidence interval
+#' @param use_relative_diff provide estimates as a relative difference, otherwise
+#' presented as an absolute difference
 #' @param nrep number of samples of posterior to compute ci
+#' @importFrom stats coef family predict quantile vcov
 calc_generic_vector_from_post <- function(m, newdata,
                                           U = NULL,
                                           ci = 0.95,
@@ -34,7 +37,7 @@ calc_generic_vector_from_post <- function(m, newdata,
   V_baseline <- matrix(V_baseline, ncol = npreds)
 
   # linear predictor matrix
-  Xp <- predict(m, newdata = newdata, type = "lpmatrix")
+  Xp <- stats::predict(m, newdata = newdata, type = "lpmatrix")
 
   # get mean covariance for multivariate normal of parameter posterior
   beta <- coef(m)

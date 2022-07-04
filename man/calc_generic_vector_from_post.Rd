@@ -23,6 +23,9 @@ row in the data frame}
 
 \item{ci}{range of confidence interval}
 
+\item{use_relative_diff}{provide estimates as a relative difference, otherwise
+presented as an absolute difference}
+
 \item{nrep}{number of samples of posterior to compute ci}
 }
 \description{

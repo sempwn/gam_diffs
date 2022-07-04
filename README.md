@@ -19,6 +19,12 @@ provide tools for estimating the difference in outcome under certain
 counterfactual scenarios for models relevant to population public
 health.
 
+Current implemented confidence interval estimates are
+
+-   delta method
+-   posterior sampling
+-   Efron bootstrap sampling
+
 ## Installation
 
 You can install the released version of gamdiffs from
@@ -37,7 +43,11 @@ devtools::install_github("sempwn/gamdiffs")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This basic example generates some data and fit a thin-plate spline to a
+time variable (`x`) with outcome `y` which is Poisson-distributed. The
+sum of the outcome between time 0 to 20 is then compared to the outcome
+between time 21 to time 40 and the resulting expected difference with
+associated confidence intervals is provided
 
 ``` r
 library(gamdiffs)
@@ -51,37 +61,49 @@ baseline_data <- dplyr::tibble(x = 0:20)
 counter_data <- dplyr::tibble(x = 21:40)
 test_diffs <- calc_sum_counterfactual_gam(m, baseline_data,
   counter_data = counter_data,
-  ci = 0.95, delta = TRUE
+  ci = 0.95
 )
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+The resulting expected sum difference between the `baseline_data` and
+`counter_data` are
 
 ``` r
 print(test_diffs)
 #> $m
-#> [1] -18.42039
+#> [1] -18
 #> 
 #> $lc
-#> [1] -38.21042
+#> [1] -38
 #> 
 #> $uc
-#> [1] 1.36964
+#> [1] 1.4
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.
+The default setting is to estimate the confidence interval from the
+delta method. The resulting confidence interval from sampling of the
+posterior (with improper priors) can be calculated as
 
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+``` r
+post_diffs <- calc_sum_counterfactual_gam(m, 
+  baseline_data,
+  use_post = TRUE,
+  nrep = 1000,
+  counter_data = counter_data,
+  ci = 0.95
+)
+print(post_diffs)
+#> $m
+#> [1] -18
+#> 
+#> $lc
+#> 2.5% 
+#>  -39 
+#> 
+#> $uc
+#> 97.5% 
+#>   2.2
+```
 
 ## Code of Conduct
 
