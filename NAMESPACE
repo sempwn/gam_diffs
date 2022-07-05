@@ -2,6 +2,7 @@
 
 export(calc_diff_vector_gam)
 export(calc_sum_counterfactual_gam)
+importFrom(stats,as.formula)
 importFrom(stats,coef)
 importFrom(stats,family)
 importFrom(stats,predict)

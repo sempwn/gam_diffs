@@ -34,8 +34,6 @@ and expectation. Can be one of the following:
 
 \item{nrep}{number of samples used for posterior sampling. Only used if \code{use_post}
 is \code{TRUE}}
-
-\item{use_post}{Use posterior to sample estimaton of means and confidence intervals}
 }
 \value{
 list

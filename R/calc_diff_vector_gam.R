@@ -10,7 +10,6 @@
 #' @param ci range of confidence interval
 #' @param use_relative_diff provide estimates as a relative difference, otherwise
 #' presented as an absolute difference
-#' @param use_post Use posterior to sample estimaton of means and confidence intervals
 #' @param nrep number of samples used for posterior sampling. Only used if `use_post`
 #'  is `TRUE`
 #' @inheritParams calc_sum_counterfactual_gam

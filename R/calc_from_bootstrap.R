@@ -12,6 +12,8 @@
 #' * lc - lower confidence interval
 #' * uc - upper confidence interval
 #' * total_n - total number of samples in bootstrap
+#' @noRd
+#' @importFrom stats as.formula
 calc_generic_vector_from_bootstrap <- function(m,
                                      newdata,
                                      U = NULL,
@@ -49,7 +51,7 @@ calc_generic_vector_from_bootstrap <- function(m,
 
     preds <- tryCatch(
       {
-        m_sample <- gam(as.formula(m$formula),
+        m_sample <- mgcv::gam(as.formula(m$formula),
                         data = sample_data,
                         family = m$family
         )

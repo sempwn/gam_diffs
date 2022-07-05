@@ -13,8 +13,10 @@ create_random_data <- function() {
 }
 
 
-#' check the input type for [calc_generic_from_post] and [calc_generic_from_bootsrap]
-#' functions
+#' check the input type for [gamdiffs:::calc_generic_from_post] and [gamdiffs:::calc_generic_from_bootsrap]
+#' @param npreds number of predictors
+#' @param U generic matrix
+#' @noRd
 input_check <- function(npreds,U){
   if (npreds < 2) {
     stop("newdata needs two rows or more.")
@@ -31,6 +33,7 @@ input_check <- function(npreds,U){
 }
 
 #' return vector of method names
+#' @noRd
 get_method_names <- function(){
   c("delta","bootstrap","posterior")
 }

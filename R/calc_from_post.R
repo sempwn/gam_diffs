@@ -13,6 +13,7 @@
 #' * m - mean
 #' * lc - lower confidence interval
 #' * uc - upper confidence interval
+#' @noRd
 calc_generic_vector_from_post <- function(m, newdata,
                                           U = NULL,
                                           ci = 0.95,
@@ -73,6 +74,7 @@ calc_generic_vector_from_post <- function(m, newdata,
 #' @param use_relative_diff provide estimates as a relative difference, otherwise
 #' presented as an absolute difference
 #' @param nrep number of samples of posterior to compute ci
+#' @noRd
 calc_diff_from_post <- function(m, newdata, ci = 0.95,
                                 use_relative_diff = FALSE,
                                 nrep = 1000) {

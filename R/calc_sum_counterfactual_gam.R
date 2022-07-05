@@ -77,7 +77,7 @@ calc_sum_counterfactual_gam <- function(m, baseline_data,
   }else if(method == "delta"){
     res <- calc_generic_vector_gam(m, newdata,
       U = U,
-      ci = ci, delta = delta,
+      ci = ci,
       use_relative_diff = use_relative_diff
     )
   }else{
