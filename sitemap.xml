@@ -31,27 +31,12 @@
     <loc>/index.html</loc>
   </url>
   <url>
-    <loc>/reference/calc_diff_from_post.html</loc>
-  </url>
-  <url>
     <loc>/reference/calc_diff_vector_gam.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calc_generic_vector_from_bootstrap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calc_generic_vector_from_post.html</loc>
   </url>
   <url>
     <loc>/reference/calc_sum_counterfactual_gam.html</loc>
   </url>
   <url>
-    <loc>/reference/get_method_names.html</loc>
-  </url>
-  <url>
     <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/input_check.html</loc>
   </url>
 </urlset>
