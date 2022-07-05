@@ -28,4 +28,5 @@ Imports:
     stats,
     glue,
     dplyr,
-    MASS
+    MASS,
+    progress

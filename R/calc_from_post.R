@@ -1,13 +1,18 @@
 #' calculate difference of set of vectors by bootstrapping
 #' @param m model object
-#' @param newdata data.frame nrow >= 2 defining points to compare to the first
-#' row in the data frame
+#' @param newdata data
 #' @param U difference matrix. defines the vector of differences being computed
 #' @param ci range of confidence interval
 #' @param use_relative_diff provide estimates as a relative difference, otherwise
 #' presented as an absolute difference
 #' @param nrep number of samples of posterior to compute ci
 #' @importFrom stats coef family predict quantile vcov
+#' @returns
+#' An `list` object. The output has the following elements:
+#'
+#' * m - mean
+#' * lc - lower confidence interval
+#' * uc - upper confidence interval
 calc_generic_vector_from_post <- function(m, newdata,
                                           U = NULL,
                                           ci = 0.95,
@@ -15,18 +20,7 @@ calc_generic_vector_from_post <- function(m, newdata,
                                           nrep = 1000) {
   npreds <- nrow(newdata)
 
-  if (npreds < 2) {
-    stop("newdata needs two rows or more.")
-  }
-
-  # check that U has right dimensions
-  if (!(nrow(U) == npreds)) {
-    stop(glue::glue("U must have rows of length {npreds}"))
-  }
-
-  if (ncol(U) != 2) {
-    stop("U must have 2 columns: one for baseline and one for comparison.")
-  }
+  input_check(npreds,U)
 
   # flat vector version of 2 x npreds
   V <- U[, 1] - U[, 2]

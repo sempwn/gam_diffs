@@ -9,26 +9,27 @@
 #' @param counter_data data.frame of counterfactual predictors. `counter_data`
 #' cannot be `NULL`
 #' @param ci range of confidence interval
-#' @param delta Boolean determines whether to apply the delta approximation
-#' to a log link function
 #' @param use_relative_diff provide estimates as a relative difference, otherwise
 #' presented as an absolute difference
-#' @param use_post Use posterior to sample estimaton of means and confidence intervals
 #' @param nrep number of samples used for posterior sampling. Only used if `use_post`
 #'  is `TRUE`
 #' @return list
 #' @export
 calc_sum_counterfactual_gam <- function(m, baseline_data,
                                         counter_data = NULL,
-                                        ci = 0.95, delta = TRUE,
+                                        ci = 0.95,
                                         use_relative_diff = FALSE,
-                                        use_post = FALSE,
+                                        method = "delta",
                                         nrep = 1000) {
   n_baseline <- nrow(baseline_data)
   total_rows <- n_baseline
   newdata <- baseline_data
 
   error_no_counter_data_if_using_relative(counter_data, use_relative_diff)
+
+  if(!method %in% get_method_names()){
+    stop(glue::glue("method {method} is not one of {get_method_names()}"))
+  }
 
   if (is.null(counter_data)) {
     U <- rep(1, total_rows)
@@ -50,19 +51,29 @@ calc_sum_counterfactual_gam <- function(m, baseline_data,
   # Create the difference matrix
   U <- matrix(U, nrow = total_rows, ncol = 2)
 
-  if(use_post){
+  if(method == "posterior"){
     res <- calc_generic_vector_from_post(m, newdata,
       U = U,
       ci = ci,
       use_relative_diff = use_relative_diff,
       nrep = nrep
     )
-  }else{
+  }else if(method == "bootstrap"){
+    res <- calc_generic_vector_from_bootstrap(m,
+      newdata,
+      U = U,
+      ci = ci,
+      use_relative_diff = use_relative_diff,
+      nrep = nrep
+    )
+  }else if(method == "delta"){
     res <- calc_generic_vector_gam(m, newdata,
       U = U,
       ci = ci, delta = delta,
       use_relative_diff = use_relative_diff
     )
+  }else{
+    stop(glue::glue("{method} not implemented."))
   }
 
 
