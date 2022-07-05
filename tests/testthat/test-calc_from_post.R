@@ -5,8 +5,8 @@ test_that("sum counterfactual gam returns m lc and uc from posterior", {
   counter_data <- dplyr::tibble(x = 21:40)
   test_diffs <- calc_sum_counterfactual_gam(m, baseline_data,
                                             counter_data = counter_data,
-                                            ci = 0.95, delta = TRUE,
-                                            use_post = TRUE
+                                            ci = 0.95,
+                                            method = "posterior"
 
   )
 
@@ -20,8 +20,8 @@ test_that("sum counterfactual gam returns non-zero from posterior", {
   counter_data <- dplyr::tibble(x = 21:40)
   test_diffs <- calc_sum_counterfactual_gam(m, baseline_data,
                                             counter_data = counter_data,
-                                            ci = 0.95, delta = TRUE,
-                                            use_post = TRUE
+                                            ci = 0.95,
+                                            method = "posterior"
 
   )
   is_not_zero <- sapply(test_diffs, function(x){x!=0})

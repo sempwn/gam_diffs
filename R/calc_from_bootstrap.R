@@ -11,7 +11,8 @@
 #' * m - mean
 #' * lc - lower confidence interval
 #' * uc - upper confidence interval
-calc_diff_from_bootstrap <- function(m,
+#' * total_n - total number of samples in bootstrap
+calc_generic_vector_from_bootstrap <- function(m,
                                      newdata,
                                      U = NULL,
                                      ci = 0.95,
@@ -65,22 +66,22 @@ calc_diff_from_bootstrap <- function(m,
 
 
 
-    opt[, i] <- sum(base::t(V) %*% preds)
+    opt[i] <- V %*% preds
 
     if(use_relative_diff){
-      baseline_opt <- sum(base::t(V_baseline) %*% preds)
-      opt[, i] <- opt[, i]/baseline_opt
+      baseline_opt <- V_baseline %*% preds
+      opt[i] <- opt[i]/baseline_opt
     }
 
 
     pb$tick()
   }
 
-  total_n <- sum(!is.na(opt[1, ]))
+  total_n <- sum(!is.na(opt))
 
-  diffs <- mean(opt)
-  lc <- stats::quantile(opt, probs = (1 - ci) / 2)
-  uc <- stats::quantile(opt, probs = 1 - (1 - ci) / 2)
+  diffs <- mean(opt, na.rm = TRUE)
+  lc <- stats::quantile(opt, probs = (1 - ci) / 2, na.rm = TRUE)
+  uc <- stats::quantile(opt, probs = 1 - (1 - ci) / 2, na.rm = TRUE)
 
   return(list(m = diffs, lc = lc, uc = uc, total_n = total_n))
 }

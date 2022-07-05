@@ -11,7 +11,15 @@
 #' @param ci range of confidence interval
 #' @param use_relative_diff provide estimates as a relative difference, otherwise
 #' presented as an absolute difference
-#' @param nrep number of samples used for posterior sampling. Only used if `use_post`
+#' @param method Selects which method is used to estimate confidence intervals
+#' and expectation. Can be one of the following:
+#' \itemize{
+#'  \item{"delta"}{Implements delta approximation.}
+#'  \item{"posterior"}{Implements posterior sampling. Use `nrep` to specify number of bootstrap samples}
+#'  \item{"bootstrap"}{Implements Efron Bootstrap. Use `nrep` to specify number of bootstrap samples}
+#' }
+#' @param nrep number of samples used for posterior sampling. Only used if using
+#' `posterior` or `bootstrap` methods
 #'  is `TRUE`
 #' @return list
 #' @export

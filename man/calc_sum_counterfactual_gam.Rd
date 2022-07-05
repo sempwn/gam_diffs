@@ -9,9 +9,8 @@ calc_sum_counterfactual_gam(
   baseline_data,
   counter_data = NULL,
   ci = 0.95,
-  delta = TRUE,
   use_relative_diff = FALSE,
-  use_post = FALSE,
+  method = "delta",
   nrep = 1000
 )
 }
@@ -25,15 +24,19 @@ cannot be \code{NULL}}
 
 \item{ci}{range of confidence interval}
 
-\item{delta}{Boolean determines whether to apply the delta approximation
-to a log link function}
-
 \item{use_relative_diff}{provide estimates as a relative difference, otherwise
 presented as an absolute difference}
 
-\item{use_post}{Use posterior to sample estimaton of means and confidence intervals}
+\item{method}{Selects which method is used to estimate confidence intervals
+and expectation. Can be one of the following:
+\itemize{
+\item{"delta"}{Implements delta approximation.}
+\item{"posterior"}{Implements posterior sampling. Use \code{nrep} to specify number of bootstrap samples}
+\item{"bootstrap"}{Implements Efron Bootstrap. Use \code{nrep} to specify number of bootstrap samples}
+}}
 
-\item{nrep}{number of samples used for posterior sampling. Only used if \code{use_post}
+\item{nrep}{number of samples used for posterior sampling. Only used if using
+\code{posterior} or \code{bootstrap} methods
 is \code{TRUE}}
 }
 \value{

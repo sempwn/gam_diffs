@@ -5,7 +5,7 @@ test_that("sum counterfactual gam returns m lc and uc", {
   counter_data <- dplyr::tibble(x = 21:40)
   test_diffs <- calc_sum_counterfactual_gam(m, baseline_data,
     counter_data = counter_data,
-    ci = 0.95, delta = TRUE
+    ci = 0.95
   )
 
   expect_setequal(names(test_diffs), c("m", "lc", "uc"))
@@ -19,7 +19,7 @@ test_that("error on different colnames for baseline and counter data", {
   expect_error(
     calc_sum_counterfactual_gam(m, baseline_data,
       counter_data = counter_data,
-      ci = 0.95, delta = TRUE
+      ci = 0.95
     )
   )
 })
@@ -31,7 +31,7 @@ test_that("absolute differerence produces finite values", {
   counter_data <- dplyr::tibble(x = 21:40)
   test_diffs <- calc_sum_counterfactual_gam(m, baseline_data,
     counter_data = counter_data,
-    ci = 0.95, delta = TRUE,
+    ci = 0.95,
     use_relative_diff = FALSE
   )
 
@@ -47,7 +47,7 @@ test_that("relative differerence produces expected m lc and uc", {
   counter_data <- dplyr::tibble(x = 21:40)
   test_diffs <- calc_sum_counterfactual_gam(m, baseline_data,
     counter_data = counter_data,
-    ci = 0.95, delta = TRUE,
+    ci = 0.95,
     use_relative_diff = TRUE
   )
 
@@ -61,7 +61,7 @@ test_that("relative differerence produces finite values", {
   counter_data <- dplyr::tibble(x = 21:40)
   test_diffs <- calc_sum_counterfactual_gam(m, baseline_data,
     counter_data = counter_data,
-    ci = 0.95, delta = TRUE,
+    ci = 0.95,
     use_relative_diff = TRUE
   )
   is_result_finite <- sapply(test_diffs, is.finite)
@@ -76,7 +76,7 @@ test_that("sum with no counter data produces finite values", {
   counter_data <- dplyr::tibble(x = 21:40)
   test_diffs <- calc_sum_counterfactual_gam(m, baseline_data,
     counter_data = NULL,
-    ci = 0.95, delta = TRUE,
+    ci = 0.95,
     use_relative_diff = FALSE
   )
 
@@ -92,7 +92,7 @@ test_that("error on counter_data not null and use_relative_diff", {
   counter_data <- dplyr::tibble(x = 21:40)
   test_diffs <- calc_sum_counterfactual_gam(m, baseline_data,
     counter_data = counter_data,
-    ci = 0.95, delta = TRUE,
+    ci = 0.95,
     use_relative_diff = TRUE
   )
 
