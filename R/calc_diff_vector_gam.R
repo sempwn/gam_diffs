@@ -25,6 +25,10 @@ calc_diff_vector_gam <- function(m, newdata, ci = 0.95,
     stop("newdata needs two rows or more.")
   }
 
+  if(!tibble::is_tibble(newdata)){
+    newdata <- tibble::as_tibble(newdata)
+  }
+
   diffs <- rep(NA, npreds - 1)
   lc <- rep(NA, npreds - 1)
   uc <- rep(NA, npreds - 1)

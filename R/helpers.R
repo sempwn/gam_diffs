@@ -35,5 +35,5 @@ input_check <- function(npreds,U){
 #' return vector of method names
 #' @noRd
 get_method_names <- function(){
-  c("delta","bootstrap","posterior")
+  c("delta","bootstrap","posterior","efron bootstrap")
 }

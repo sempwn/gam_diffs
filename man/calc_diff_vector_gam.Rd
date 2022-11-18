@@ -29,7 +29,8 @@ and expectation. Can be one of the following:
 \itemize{
 \item{"delta"}{Implements delta approximation.}
 \item{"posterior"}{Implements posterior sampling. Use \code{nrep} to specify number of bootstrap samples}
-\item{"bootstrap"}{Implements Efron Bootstrap. Use \code{nrep} to specify number of bootstrap samples}
+\item{"bootstrap"}{Implements simple bootstrap. Use \code{nrep} to specify number of bootstrap samples}
+\item{"efron bootstrap"}{Implements Efron bootstrap. Use \code{nrep} to specify number of bootstrap samples}
 }}
 
 \item{nrep}{number of samples used for posterior sampling. Only used if \code{use_post}

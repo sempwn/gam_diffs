@@ -16,7 +16,8 @@
 #' \itemize{
 #'  \item{"delta"}{Implements delta approximation.}
 #'  \item{"posterior"}{Implements posterior sampling. Use `nrep` to specify number of bootstrap samples}
-#'  \item{"bootstrap"}{Implements Efron Bootstrap. Use `nrep` to specify number of bootstrap samples}
+#'  \item{"bootstrap"}{Implements simple bootstrap. Use `nrep` to specify number of bootstrap samples}
+#'  \item{"efron bootstrap"}{Implements Efron bootstrap. Use `nrep` to specify number of bootstrap samples}
 #' }
 #' @param nrep number of samples used for posterior sampling. Only used if using
 #' `posterior` or `bootstrap` methods
@@ -79,6 +80,14 @@ calc_sum_counterfactual_gam <- function(m, baseline_data,
       U = U,
       ci = ci,
       use_relative_diff = use_relative_diff
+    )
+  }else if(method == "efron bootstrap"){
+    res <- calc_generic_vector_from_efron_bootstrap(m,
+      newdata,
+      U = U,
+      ci = ci,
+      use_relative_diff = use_relative_diff,
+      nrep = nrep
     )
   }else{
     stop(glue::glue("{method} not implemented."))

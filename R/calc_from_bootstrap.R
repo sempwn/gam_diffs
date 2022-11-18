@@ -105,7 +105,7 @@ calc_generic_vector_from_bootstrap <- function(m,
 #' * uc - upper confidence interval
 #' * total_n - total number of samples in bootstrap
 #' @noRd
-#' @importFrom stats as.formula
+#' @importFrom stats as.formula delete.response reformulate resid terms
 calc_generic_vector_from_efron_bootstrap <- function(m,
                                                newdata,
                                                U = NULL,
@@ -126,7 +126,12 @@ calc_generic_vector_from_efron_bootstrap <- function(m,
   # get residuals
   m_resids <- resid(m)#analytic_ed_data$counts - m_preds
 
+  # get number of data points for original data used in fitting
+  ndata <- length(m_preds)
+
   ilink <- family(m)$linkinv
+  link <- family(m)$link
+  family <- family(m)$family
 
   # reformulate formula to have y as response
   formula_terms <- terms(m$formula)
@@ -151,12 +156,16 @@ calc_generic_vector_from_efron_bootstrap <- function(m,
   )
 
   for (i in 1:nrep) {
-    sample_y <- m_preds + sample(m_resids, length(m_resids), replace = TRUE)
+    sample_y <- m_preds + sample(m_resids, ndata, replace = TRUE)
     sample_data <- model_data
     sample_data[, "y"] <- as.numeric(ilink(sample_y))
 
-    if(family == "poisson"){
-      sample_data[, "y"] <- rpois(sample_data[, "y"])
+    if(link == "log"){
+      # need to ensure discrete
+      sample_data[, "y"] <- floor(sample_data[, "y"])
+    }else{
+      # no need to update
+      sample_data[, "y"] <- sample_data[, "y"]
     }
 
     preds <- tryCatch(
